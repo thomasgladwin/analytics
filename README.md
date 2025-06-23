@@ -2,7 +2,7 @@
 
 These are some functions to log basic site-visitor behaviours: page counts and click counts. They both assume a database for the site has been set up; in my case, this was a MySQL database on Dreamhost.
 
-## Page visit counter<
+## Page visit counter
 
 This page counter keeps the saved information very basic - it doesn't save all the individual visits, just the tally per page and the date-time of the last visit.
 
