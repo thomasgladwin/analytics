@@ -9,6 +9,7 @@ This page counter keeps the saved information very basic - it doesn't save all t
 First, to initialize the database table, or reset it to clean up, make and open a page with the below PHP code, with a chosen password as a GET variable:
 
 ```
+<?php
 
 $servername = "mysql.xxx.com";
 $username = "xxx";
@@ -74,13 +75,13 @@ try {
 }
 
 $conn->close();
-
+?>
 ```
 
 To log how often a page is visited, just add the PHP code below into the headers of the pages to be logged.
 
 ```
- <?php
+<?php
 try {
 	$servername = "mysql.xxx.com";
 	$username = "xxx";
@@ -158,13 +159,12 @@ try {
 }
 
 ?> 
-
 ```
 
 The following page lists out the visits in a table:
 
 ```
-
+<?php
 $servername = "mysql.xxx.com";
 $username = "xxx";
 $password = "xxx";
@@ -206,7 +206,7 @@ try {
 }
 
 $conn->close();
-
+?>
 ```
 
 ## Click counter
@@ -216,7 +216,7 @@ These functions create a logging system for clicks on links; easy to adjust or g
 First, as above, to initialize the database table, or reset it to clean up: Load a page with this code, and a chosen page password provided as a GET variable:
 
 ```
-
+<?php
 $servername = "mysql.xxx.com";
 $username = "xxx";
 $password = "xxx";
@@ -281,7 +281,7 @@ try {
 }
 
 $conn->close();
-
+?>
 ```
 
 Then, on each page on which to register clicks on links, add this JavaScript script (note the highly annoying hack to avoid the request getting cached and only working once):
@@ -305,6 +305,7 @@ Then, on each page on which to register clicks on links, add this JavaScript scr
 This is the PHP file called in the JavaScript function, which adds an event to the database table. Note it's expected to sit in the website's root directory.
 
 ```
+<?php
 try {
 	$servername = "mysql.xxx.com";
 	$username = "xxx";
@@ -342,11 +343,13 @@ try {
 } catch (Exception $e) {
 
 }
+?>
 ```
 
 Finally, to list the clicked links:
 
 ```
+<?php
 $servername = "mysql.xxx.com";
 $username = "xxx";
 $password = "xxx";
@@ -387,5 +390,6 @@ try {
 }
 
 $conn->close();
+?>
 ```
 
