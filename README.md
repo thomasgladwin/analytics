@@ -80,7 +80,7 @@ $conn->close();
 To log how often a page is visited, just add the PHP code below into the headers of the pages to be logged.
 
 ```
-
+ <?php
 try {
 	$servername = "mysql.xxx.com";
 	$username = "xxx";
@@ -101,14 +101,52 @@ try {
 	} catch(PDOException $e) {
 	}
 
-	// Write event
-	$val = $_GET["val"];
+	try {
+		$sql = "CREATE TABLE IF NOT EXISTS SiteMem (
+		id INT(6) AUTO_INCREMENT PRIMARY KEY,
+		counter INT(6),
+		URL VARCHAR(255),
+		last_visit DATETIME
+		)";
+		$result = $conn->query($sql);
+	} catch(PDOException $e) {
+	}
+
+	$this_URL = strtok($_SERVER["REQUEST_URI"], '?');
 	$this_datetime = date('Y-m-d H:i:s');
 
+	// Retrieve and increment counter
+
+	$current_counter = 0;
+
 	try {	
-		$sql = "INSERT INTO ClicksMem (URL, clickdate) VALUES (?, ?)";
+		$stmt = $conn->prepare("select counter from SiteMem where URL=?");
+		$stmt->bind_param("s", $this_URL);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		if ($result->num_rows > 0) {
+		  while($row = $result->fetch_assoc()) {
+			$current_counter = $row["counter"];
+		  }
+		} else {
+		  $current_counter = 0;
+		  // Add row for this URL
+		  $sql = "INSERT INTO SiteMem (counter, URL, last_visit) VALUES (0, ?, '".$this_datetime."')";
+		  $stmt = $conn->prepare($sql);
+		  $stmt->bind_param("s", $this_URL);
+		  $stmt->execute();
+		}
+	} catch(PDOException $e) {
+	}
+
+	$current_counter++;
+
+	// Write
+
+	try {	
+		$sql = "UPDATE SiteMem SET counter = ".$current_counter." WHERE URL=?";
 		$stmt = $conn->prepare($sql);
-		$stmt->bind_param("ss", $val, $this_datetime);
+		$stmt->bind_param("s", $this_URL);
 		$stmt->execute();
 	} catch(PDOException $e) {
 	}
@@ -116,7 +154,10 @@ try {
 	$conn->close();
 
 } catch (Exception $e) {
+
 }
+
+?> 
 
 ```
 
