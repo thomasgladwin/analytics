@@ -112,7 +112,7 @@ $conn->close();
 					//window.alert("Testing " + xhttp.responseText);
 				}
 			}
-			arg0 = "/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=0&anticache=" + Math.random();
+			arg0 = "/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=0&anticache=" + Math.random() + "&password=xxx";
 			xhttpOnload.open("GET", arg0, true);
 			xhttpOnload.send();
 		}, false);
