@@ -27,7 +27,7 @@ if ($conn->connect_error) {
 ```
 <?php
 require("open_conn.php");
-$page_password = 'fgPLPhfdhg63245cdfd';
+$page_password = 'xxx';
 
 $reset_pw = $_GET["password"];
 if ($reset_pw != $page_password) {
@@ -88,6 +88,7 @@ try {
 $conn->close();
 
 ?> 
+
 
 ```
 ## Script for calling the logging function on events
