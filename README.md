@@ -201,7 +201,7 @@ try {
 
 echo '<p>Database reset at: ';
 try {
-	$stmt = $conn->prepare("select last_restart from LoggingInfo");
+	$stmt = $conn->prepare("select last_restart from LoggingInfo order by last_restart desc limit 1");
 	$stmt->execute();
 	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
