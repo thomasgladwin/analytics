@@ -1,6 +1,6 @@
 # Homebrew analytics
 
-This is a simple method to log basic site-visitor behaviour: which pages are visited, and which links are clicked. The logging involves (1) setting up the database (the database-hosting assumed to have been done; I used Dreamhost's MySQL hosting), (2) JavaScript (with some PHP) to be placed in the header of each page to be logged, (3) a PHP file called from the JavaScript, and (4) a PHP file to display the database.
+This is a basic method to log basic site-visitor behaviour: which pages are visited, and which links are clicked. The logging involves (1) setting up the database (the database-hosting assumed to have been done; I used Dreamhost's MySQL hosting), (2) JavaScript (with some PHP) to be placed in the header of each page to be logged, (3) a PHP file called from the JavaScript, and (4) a PHP file to display the database.
 
 Scripts are works-in-progress, obviously no guarantees.
 
