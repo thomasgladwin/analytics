@@ -91,8 +91,13 @@ $conn->close();
 
 
 ```
-## Script for calling the logging function on events
+## To be added to page headers: Script for calling the logging function on events
 ```
+<?php
+	try {
+		session_start();
+	}
+?>
 	<script>
 		<?php
 			if (!isset($_SESSION['VisitID'])) {
