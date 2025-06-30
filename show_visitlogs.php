@@ -1,6 +1,10 @@
 <?php
 require("open_conn.php");
 
+$reset_pw = $_GET["password"];
+if ($reset_pw != $show_info_password) {
+	return;
+}
 try {	
 	$sql = "use ".$db_name;
 	$result = $conn->query($sql);
