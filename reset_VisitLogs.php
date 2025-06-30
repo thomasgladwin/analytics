@@ -7,7 +7,7 @@ if ($reset_pw != $reset_page_password) {
 }
 
 try {	
-	$sql = "use tegladwin_db";
+	$sql = "use ".$db_name;
 	$result = $conn->query($sql);
 } catch(PDOException $e) {
 	echo $sql . "<br>" . $e->getMessage();
