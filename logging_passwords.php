@@ -7,6 +7,6 @@ $db_name = "xxx";
 // Other passwords
 $password_get = "xxx"; # For VisitLogs.php
 $reset_page_password = 'xxx'; # For database reset page
-$show_info_password = 'xxx'; # For database reset page
+$show_info_password = 'xxx'; # For database info page
 
 ?> 
