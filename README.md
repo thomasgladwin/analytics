@@ -4,6 +4,6 @@ This is a basic method to log basic site-visitor behaviour: which pages are visi
 
 Adapting the scripts to your own site should just involve copying the files to the website root, adding the JavaScript code to the site's pages' headers, and changing the passwords in logging_passwords.php.
 
-The show_visitlogs.php page displays information from the database. This may need to be updated to be relevant for a given site.
+The show_visitlogs.php page displays information from the database, with a password given via GET. This may need to be updated to be relevant for a given site.
 
 Scripts are works-in-progress, obviously no guarantees.
