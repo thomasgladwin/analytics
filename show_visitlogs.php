@@ -48,28 +48,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-$page_to_test = "/papers.php";
-echo '<p>Preceding Page Probability (P3); example for '.$page_to_test.':<br>';
-try {
-	$stmt = $conn->prepare("WITH CTE1 AS (SELECT DISTINCT visit_id, current, target from VisitLogs v1 where log_time < (SELECT MAX(log_time) from VisitLogs v2 WHERE v1.visit_id = v2.visit_id and current = '".$page_to_test."')), CTE2 AS (SELECT Count(*) as N, (Select Count(*) from CTE1) as Total, current FROM CTE1 Group By current Order By N desc) Select N/Total as Prob, current From CTE2");
-	$stmt->execute();
-	$result = $stmt->get_result();
-	if ($result->num_rows > 0) {
-	 echo '<table>';
-	 while($row = $result->fetch_assoc()) {
-		echo '<tr>';
-		echo '<td>'.$row["Prob"].'</td><td>'.$row["current"].'</td>';
-		echo '</tr>';
-	  }
-	  echo '</table>';
-	} else {
-	  echo "No results<br>";
-	}
-} catch(PDOException $e) {
-	echo $sql . "<br>" . $e->getMessage();
-}
-
-echo '<p>Preceding Page Probability (P3); example for all pages:<br>';
+echo '<p>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page.<br>';
 try {
 	$stmt = $conn->prepare("WITH
 	CTE_Outer AS (
@@ -93,6 +72,9 @@ try {
 	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
 	 echo '<table>';
+		echo '<tr>';
+		echo '<td>'."Target page".'</td><td>'."Preceding page".'</td><td>'."Probability".'</td>';
+		echo '</tr>';
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
 		echo '<td>'.$row["Page"].'</td><td>'.$row["Prepage"].'</td><td>'.$row["Prob"].'</td>';
