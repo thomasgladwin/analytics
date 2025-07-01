@@ -69,6 +69,42 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
+echo '<p>Preceding Page Probability (P3); example for all pages:<br>';
+try {
+	$stmt = $conn->prepare("WITH
+	CTE_Outer AS (
+        Select distinct v1.current as Page, v2.current as Prepage from VisitLogs v1
+		left join VisitLogs v2 on v2.current <> v1.current
+	)
+	SELECT *, (
+	WITH
+    	CTE1 AS (
+            SELECT DISTINCT visit_id, current, target from VisitLogs v1 
+            where log_time < (SELECT MAX(log_time) from VisitLogs v2 WHERE v1.visit_id = v2.visit_id and current = CTE_Outer.Page)
+        ),
+    	CTE2 AS (
+            SELECT Count(*) as N, (Select Count(*) from CTE1) as Total, current FROM CTE1 
+            Group By current Order By N desc
+        )
+    Select N/Total as Prob From CTE2 where CTE2.current = CTE_Outer.Prepage
+	) as Prob FROM CTE_Outer ORDER BY Page, Prob desc
+	");
+	$stmt->execute();
+	$result = $stmt->get_result();
+	if ($result->num_rows > 0) {
+	 echo '<table>';
+	 while($row = $result->fetch_assoc()) {
+		echo '<tr>';
+		echo '<td>'.$row["Page"].'</td><td>'.$row["Prepage"].'</td><td>'.$row["Prob"].'</td>';
+		echo '</tr>';
+	  }
+	  echo '</table>';
+	} else {
+	  echo "No results<br>";
+	}
+} catch(PDOException $e) {
+	echo $sql . "<br>" . $e->getMessage();
+}
 
 echo '<p>All logging:<br>';
 try {
