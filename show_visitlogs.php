@@ -50,7 +50,7 @@ try {
 
 echo '<p>Clicks<br>';
 try {
-	$stmt = $conn->prepare('Select * from VisitLogs where target <> "0"');
+	$stmt = $conn->prepare('Select * from VisitLogs where target <> "0" order by log_time desc');
 	$stmt->execute();
 	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
