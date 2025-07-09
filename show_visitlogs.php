@@ -30,7 +30,7 @@ try {
 
 echo '<p>Page visit counter (unique per visit):<br>';
 try {
-	$stmt = $conn->prepare('WITH CTE1 AS (select distinct visit_id, current from VisitLogs where target = "0" order by log_time desc) Select current, COUNT(*) as N FROM CTE1 GROUP BY CURRENT;');
+	$stmt = $conn->prepare('WITH CTE1 AS (select distinct visit_id, current from VisitLogs where target = "0" order by log_time desc) Select current, COUNT(*) as N FROM CTE1 GROUP BY CURRENT order by N desc;');
 	$stmt->execute();
 	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
@@ -38,6 +38,26 @@ try {
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
 		echo '<td>'.$row["current"].'</td><td>'.$row["N"]."</td>";
+		echo '</tr>';
+	  }
+	  echo '</table>';
+	} else {
+	  echo "No results<br>";
+	}
+} catch(PDOException $e) {
+	echo $sql . "<br>" . $e->getMessage();
+}
+
+echo '<p>Clicks<br>';
+try {
+	$stmt = $conn->prepare('Select * from VisitLogs where target <> "0"');
+	$stmt->execute();
+	$result = $stmt->get_result();
+	if ($result->num_rows > 0) {
+	 echo '<table>';
+	 while($row = $result->fetch_assoc()) {
+		echo '<tr>';
+		echo '<td>'.$row["ip"].'</td><td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['target'].'</td><td>'.$row["log_time"].'</td>';
 		echo '</tr>';
 	  }
 	  echo '</table>';
@@ -97,7 +117,7 @@ try {
 	 echo '<table>';
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
-		echo '<td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['target'].'</td><td>'.$row["log_time"].'</td>';
+		echo '<td>'.$row["ip"].'</td><td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['target'].'</td><td>'.$row["log_time"].'</td>';
 		echo '</tr>';
 	  }
 	  echo '</table>';

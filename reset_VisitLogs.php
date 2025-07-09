@@ -25,7 +25,8 @@ try {
 	visit_id VARCHAR(255),
 	current VARCHAR(255),
 	target VARCHAR(255),
-	log_time DATETIME
+	log_time DATETIME,
+	ip VARCHAR(255)
 	)";
 	$result = $conn->query($sql);
 } catch(PDOException $e) {

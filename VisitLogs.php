@@ -28,12 +28,15 @@ try {
 	} catch(Exception $e) {
 		$target = "0";
 	}
+	
 	$this_datetime = date('Y-m-d H:i:s');
+	session_start();
+	$this_ip = $_SERVER['REMOTE_ADDR'];
 
 	try {	
-		$sql = "INSERT INTO VisitLogs (visit_id, current, target, log_time) VALUES (?, ?, ?, ?)";
+		$sql = "INSERT INTO VisitLogs (visit_id, current, target, log_time, ip) VALUES (?, ?, ?, ?, ?)";
 		$stmt = $conn->prepare($sql);
-		$stmt->bind_param("ssss", $visit_id, $current, $target, $this_datetime);
+		$stmt->bind_param("sssss", $visit_id, $current, $target, $this_datetime, $this_ip);
 		$stmt->execute();
 	} catch(PDOException $e) {
 		echo $e;
