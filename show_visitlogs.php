@@ -12,7 +12,8 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<p>Database reset at: ';
+echo '<p>Database last reset at: ';
+
 try {
 	$stmt = $conn->prepare("select last_restart from LoggingInfo order by last_restart desc limit 1");
 	$stmt->execute();
@@ -20,15 +21,63 @@ try {
 	if ($result->num_rows > 0) {
 	 while($row = $result->fetch_assoc()) {
 		echo $row["last_restart"];
+		$last_restart_str = $row["last_restart"];
+		#$now = time();
+		#$last_restart = strtotime($last_restart_str);
+		#$datediff = $now - $last_restart;
+		#$datediff_days = round($datediff / (60 * 60 * 24));
+		$last_restart = new DateTime($last_restart_str);
+		$now = new DateTime();
+		$datediff_days = (int)($last_restart->diff($now)->format("%a"));
+		echo ". Days ago: ".$datediff_days;
 	  }
 	} else {
 	  echo "No results<br>";
+	  $datediff = 0;
 	}
 } catch(PDOException $e) {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<p>Page visit counter (unique per visit):<br>';
+echo '<h1>Number of visits</h1>';
+try {
+	$stmt = $conn->prepare('SELECT COUNT(*) as N FROM (SELECT DISTINCT visit_id from VisitLogs) SQ');
+	$stmt->execute();
+	$result = $stmt->get_result();
+	while($row = $result->fetch_assoc()) {
+		if ($result->num_rows > 0) {
+			echo "Number of visits: ".$row["N"].". ";
+			if ($datediff_days > 0) {
+				$vpd = round(((float)$row["N"]) / $datediff_days, 2);
+				echo "Visits per day: ".$vpd.".<br>";
+			}
+		} else {
+			echo "No results<br>";
+		}
+	}
+} catch(PDOException $e) {
+	echo $sql . "<br>" . $e->getMessage();
+}
+try {
+	$stmt = $conn->prepare('SELECT count(*) as N FROM (SELECT DISTINCT visit_id from VisitLogs where target != "0") SQ');
+	$stmt->execute();
+	$result = $stmt->get_result();
+	while($row = $result->fetch_assoc()) {
+		if ($result->num_rows > 0) {
+			echo "Number of visits with any clicks: ".$row["N"].". ";
+			if ($datediff_days > 0) {
+				$vpd = round(((float)$row["N"]) / $datediff_days, 2);
+				echo "Visits per day: ".$vpd.".<br>";
+			}
+		} else {
+			echo "No results<br>";
+		}
+	}
+} catch(PDOException $e) {
+	echo $sql . "<br>" . $e->getMessage();
+}
+
+echo '<h1>Page visit counter (one count per visit)</h1>';
 try {
 	$stmt = $conn->prepare('WITH CTE1 AS (select distinct visit_id, current from VisitLogs where target = "0" order by log_time desc) Select current, COUNT(*) as N FROM CTE1 GROUP BY CURRENT order by N desc;');
 	$stmt->execute();
@@ -48,7 +97,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<p>Clicks<br>';
+echo '<h1>Clicks</h1>';
 try {
 	$stmt = $conn->prepare('Select * from VisitLogs where target <> "0" order by log_time desc');
 	$stmt->execute();
@@ -68,9 +117,10 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<p>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page.<br>';
+echo '<h1>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page</h1>';
 try {
-	$stmt = $conn->prepare("WITH
+	$stmt = $conn->prepare("WITH CTE_Final AS (
+WITH
 	CTE_Outer AS (
         Select distinct v1.current as Page, v2.current as Prepage from VisitLogs v1
 		left join VisitLogs v2 on v2.current <> v1.current
@@ -87,7 +137,8 @@ try {
         )
     Select N/Total as Prob From CTE2 where CTE2.current = CTE_Outer.Prepage
 	) as Prob FROM CTE_Outer ORDER BY Page, Prob desc
-	");
+)
+SELECT * From CTE_Final WHERE Prob is not null ORDER BY Page, Prob desc");
 	$stmt->execute();
 	$result = $stmt->get_result();
 	if ($result->num_rows > 0) {
@@ -108,7 +159,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<p>All logging:<br>';
+echo '<h1>All logging</h1>';
 try {
 	$stmt = $conn->prepare("select * from VisitLogs order by log_time desc");
 	$stmt->execute();
