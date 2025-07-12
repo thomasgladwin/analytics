@@ -1,3 +1,7 @@
+<html>
+<head><title>Visit info</title></head>
+<body style="margin-left:5%;">
+<h1>Visit logging info</h1>
 <?php
 require("open_conn.php");
 
@@ -39,7 +43,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h1>Number of visits</h1>';
+echo '<h2>Number of visits</h2>';
 try {
 	$stmt = $conn->prepare('SELECT COUNT(*) as N FROM (SELECT DISTINCT visit_id from VisitLogs) SQ');
 	$stmt->execute();
@@ -77,7 +81,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h1>Page visit counter (one count per visit)</h1>';
+echo '<h2>Page visit counter (one count per visit)</h2>';
 try {
 	$stmt = $conn->prepare('WITH CTE1 AS (select distinct visit_id, current from VisitLogs where target = "0" order by log_time desc) Select current, COUNT(*) as N FROM CTE1 GROUP BY CURRENT order by N desc;');
 	$stmt->execute();
@@ -86,7 +90,7 @@ try {
 	 echo '<table>';
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
-		echo '<td>'.$row["current"].'</td><td>'.$row["N"]."</td>";
+		echo '<td>'.$row["N"].'</td><td>'.$row["current"]."</td>";
 		echo '</tr>';
 	  }
 	  echo '</table>';
@@ -97,7 +101,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h1>Clicks</h1>';
+echo '<h2>Clicks</h2>';
 try {
 	$stmt = $conn->prepare('Select * from VisitLogs where target <> "0" order by log_time desc');
 	$stmt->execute();
@@ -117,7 +121,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h1>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page</h1>';
+echo '<h2>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page</h2>';
 try {
 	$stmt = $conn->prepare("WITH CTE_Final AS (
 WITH
@@ -159,7 +163,7 @@ SELECT * From CTE_Final WHERE Prob is not null ORDER BY Page, Prob desc");
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h1>All logging</h1>';
+echo '<h2>All logging</h2>';
 try {
 	$stmt = $conn->prepare("select * from VisitLogs order by log_time desc");
 	$stmt->execute();
@@ -182,3 +186,5 @@ try {
 $conn->close();
 
 ?> 
+</body>
+</html>
