@@ -1,6 +1,6 @@
 # Homebrew analytics
 
-This is a basic method to log site-visitor behaviour. The logging involves, first, setting up the database (the database-hosting assumed to have been done; I used Dreamhost's MySQL hosting) via reset_VisitLogs.php, with its password as a GET variable. Then, AJAX calls set up in the header of each page responds to the events of the page being loaded or closed or the user clicking on a link. The calls open VisitLogs.php, with some rudimentary security via a SESSION variable, which does the database operations. 
+This is a basic method to log site-visitor behaviour. The logging involves, first, setting up the database (the database-hosting assumed to have been done; I used Dreamhost's MySQL hosting) via reset_VisitLogs.php, with its password as a GET variable. Then, scripts in the header of each page respond to the events of the page being loaded or closed or the user clicking on a link. These make AJAX calls to VisitLogs.php, with some rudimentary security via a SESSION array that has to be matched to a GET variable, and that file does the database operations. 
 
 Adapting the scripts to your own site should just require the following steps:
 
