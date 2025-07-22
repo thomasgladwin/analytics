@@ -6,7 +6,7 @@ Adapting the scripts to your own site should just require the following steps:
 
 1. Create a MySQL database for your website via the hosting provider.
 2. Copying the subdirectory with PHP files to the website root.
-3. Adding the JavaScript code in header.inc to the site's pages' headers; pages have to be in PHP.
+3. Adding the JavaScript code in header_analytics.inc to the site's pages' headers; pages have to be in PHP.
 4. Changing the passwords in logging_passwords.php.
 5. Running analyticsphp/reset_VisitLogs.php?password=xxx to set up the database.
 
