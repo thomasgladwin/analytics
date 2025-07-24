@@ -197,7 +197,7 @@ try {
 	 echo '<table>';
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
-		echo '<td>'.$row["ip"].'</td><td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['target'].'</td><td>'.$row["log_time"].'</td>';
+		echo '<td>'.$row["ip"].'</td><td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['target'].'</td><td>'.$row["log_time"].'</td><td>'.$row["timeOnPage"].'</td>';
 		echo '</tr>';
 	  }
 	  echo '</table>';
