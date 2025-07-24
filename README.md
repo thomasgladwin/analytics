@@ -5,10 +5,10 @@ This is a basic method to log site-visitor behaviour. The logging involves, firs
 Adapting the scripts to your own site should just require the following steps:
 
 1. Create a MySQL database for your website via the hosting provider.
-2. Copying the subdirectory with PHP files to the website root.
-3. Adding the JavaScript code in header_analytics.inc to the site's pages' headers; pages have to be in PHP.
-4. Changing the passwords in logging_passwords.php.
-5. Running analyticsphp/reset_VisitLogs.php?password=xxx to set up the database.
+2. Copy the subdirectory with PHP files to the website root.
+3. Add the JavaScript code in header_analytics.inc to the site's pages' headers; pages have to be in PHP.
+4. Change the passwords in logging_passwords.php.
+5. Run analyticsphp/reset_VisitLogs.php?password=xxx to set up the database.
 
 The analyticsphp/show_visitlogs.php?password=xxx page displays information from the database, with a password given via GET. This includes:
 - Date since logging  started
