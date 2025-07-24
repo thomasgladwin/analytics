@@ -149,15 +149,16 @@ echo '<h2>Preceding Page Probability (P3) - likelihood a page was opened during 
 try {
 	$stmt = $conn->prepare("WITH CTE_Final AS (
 WITH
+	VLsel AS (Select * FROM VisitLogs where target in ('Open')),
 	CTE_Outer AS (
-        Select distinct v1.current as Page, v2.current as Prepage from VisitLogs v1
-		left join VisitLogs v2 on v2.current <> v1.current
+        Select distinct v1.current as Page, v2.current as Prepage from VLsel v1
+		left join VLsel v2 on v2.current <> v1.current
 	)
 	SELECT *, (
 	WITH
     	CTE1 AS (
-            SELECT DISTINCT visit_id, current, target from VisitLogs v1 
-            where log_time < (SELECT MAX(log_time) from VisitLogs v2 WHERE v1.visit_id = v2.visit_id and current = CTE_Outer.Page)
+            SELECT DISTINCT visit_id, current, target from VLsel v1 
+            where log_time < (SELECT MAX(log_time) from VLsel v2 WHERE v1.visit_id = v2.visit_id and current = CTE_Outer.Page)
         ),
     	CTE2 AS (
             SELECT Count(*) as N, (Select Count(*) from CTE1) as Total, current FROM CTE1 
