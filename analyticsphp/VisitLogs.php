@@ -2,22 +2,18 @@
 		session_start();
 		//echo 'Sess ID in VL: '.session_id();
 		//var_dump($_SESSION['php_access_codes']);
+		//echo '<script>console.log("REMOTE_ADDR: '.$_SERVER['REMOTE_ADDR'].'");</script>';
+		//echo "REMOTE_ADDR: ".$_SERVER['REMOTE_ADDR']." - ";
+		//echo "SERVER_SERVER_ADDR: ".$_SESSION['SERVER_SERVER_ADDR']." - ";
 ?>
  
 <?php
 try {
 	//session_start();
 	if (!isset($_SESSION['php_access_codes'])) {
-		die('Testing access controls. 1.');
+		die('No access: 1.');
 	}
-	
-	$index0 = array_search($_GET["key"], $_SESSION['php_access_codes']);
-	//echo $index0;
-	if ($index0 == false) {
-		die('Testing access controls. 2.');
-	}
-	unset($_SESSION['php_access_codes'][$index0]);
-	
+
 	require("open_conn.php");
 	
 	try {	
