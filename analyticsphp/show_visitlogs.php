@@ -101,7 +101,7 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h2>Page visit duration [s]</h2>';
+echo '<h2>Median page visit duration [s]</h2>';
 try {
 	$stmt = $conn->prepare('with CTE1 as (
     select current, timeOnPage, row_number() over (PARTITION BY Current ORDER by timeOnPage) as row_id, (select count(1) from VisitLogs v2 where v1.current = v2.current and target = "Close") as ct from VisitLogs v1 where target = "Close"
@@ -178,6 +178,26 @@ SELECT * From CTE_Final WHERE Prob is not null ORDER BY Page, Prob desc");
 	 while($row = $result->fetch_assoc()) {
 		echo '<tr>';
 		echo '<td>'.$row["Page"].'</td><td>'.$row["Prepage"].'</td><td>'.$row["Prob"].'</td>';
+		echo '</tr>';
+	  }
+	  echo '</table>';
+	} else {
+	  echo "No results<br>";
+	}
+} catch(PDOException $e) {
+	echo $sql . "<br>" . $e->getMessage();
+}
+
+echo '<h2>Page view durations per page-close event [s]</h2>';
+try {
+	$stmt = $conn->prepare("select *, round(timeOnPage/1000, 2) as duration from VisitLogs where target = 'Close' order by log_time desc");
+	$stmt->execute();
+	$result = $stmt->get_result();
+	if ($result->num_rows > 0) {
+	 echo '<table>';
+	 while($row = $result->fetch_assoc()) {
+		echo '<tr>';
+		echo '<td>'.$row["ip"].'</td><td>'.$row["visit_id"].'</td><td>'.$row["current"]."</td><td>".$row['duration'].'</td><td>'.$row["log_time"].'</td>';
 		echo '</tr>';
 	  }
 	  echo '</table>';
