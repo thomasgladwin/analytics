@@ -8,8 +8,9 @@
 			$vid = $_SESSION['VisitID'];
 			echo "let vid = '$vid';";
 			if (!isset($_SESSION['php_access_codes'])) {
-				$_SESSION['php_access_codes'] = array();
+				$_SESSION['php_access_codes'] = 0;
 			}
+			$_SESSION['SERVER_SERVER_ADDR'] = $_SERVER['SERVER_ADDR'];
 			//echo 'console.log("H Session_id: '.session_id().'");';
 			//echo 'console.log("H Session php_access_codes: '.$_SESSION['php_access_codes'].'");';
 		?>
@@ -28,13 +29,8 @@
 				}
 			}
 			var home_url = window.location.protocol + "//" + window.location.hostname;
-			console.log("Testing 7: " + window.location.protocol + "//" + window.location.hostname);
-			<?php
-				$key = strval(rand());
-				array_push($_SESSION['php_access_codes'], $key);
-				echo "let key = ".$key.";";
-			?>
-			arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=Open&anticache=" + Math.random() + "&key=" + key;
+			//console.log("Testing 7: " + window.location.protocol + "//" + window.location.hostname);
+			arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=Open&anticache=" + Math.random();
 			xhttpOnload.open("GET", arg0, true);
 			xhttpOnload.send();
 		}, false);
@@ -52,13 +48,8 @@
 				}
 				let timeOnClose = Date.now();
 				let timeOnPage = timeOnClose - timeStart;
-				<?php
-					$key = strval(rand());
-					array_push($_SESSION['php_access_codes'], $key);
-					echo "let key = ".$key.";";
-				?>
 				var home_url = window.location.protocol + "//" + window.location.hostname;
-				arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=" + t.href + "&anticache=" + Math.random() + "&timeOnPage=" + timeOnPage + "&key=" + key;
+				arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=" + t.href + "&anticache=" + Math.random() + "&timeOnPage=" + timeOnPage;
 				xhttp.open("GET", arg0, true);
 				xhttp.send();
 				//window.alert("Testing 2 ");
@@ -82,13 +73,8 @@
 			}
 			let timeOnClose = Date.now();
 			let timeOnPage = timeOnClose - timeStart;
-			<?php
-				$key = strval(rand());
-				array_push($_SESSION['php_access_codes'], $key);
-				echo "let key = ".$key.";";
-			?>
 			var home_url = window.location.protocol + "//" + window.location.hostname;
-			arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=Close&anticache=" + Math.random() + "&timeOnPage=" + timeOnPage + "&key=" + key;
+			arg0 = home_url + "/analyticsphp/VisitLogs.php?vid=" + vid + "&current=" + location.pathname + "&target=Close&anticache=" + Math.random() + "&timeOnPage=" + timeOnPage;
 			xhttp.open("GET", arg0, true);
 			xhttp.send();
 			//window.alert("Testing 2 ");
