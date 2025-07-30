@@ -106,7 +106,7 @@ try {
 	$stmt = $conn->prepare('with CTE1 as (
     select current, timeOnPage, row_number() over (PARTITION BY Current ORDER by timeOnPage) as row_id, (select count(1) from VisitLogs v2 where v1.current = v2.current and target = "Close") as ct from VisitLogs v1 where target = "Close"
 )
-select current, round(avg(timeOnPage)/1000, 1) as duration from CTE1 where row_id between ct/2.0 and ct/2.0 + 1 group by current;
+select current, round(avg(timeOnPage)/1000, 1) as duration from CTE1 where row_id between ct/2.0 and ct/2.0 + 1 group by current order by duration desc;
 ');
 	$stmt->execute();
 	$result = $stmt->get_result();
@@ -145,11 +145,11 @@ try {
 	echo $sql . "<br>" . $e->getMessage();
 }
 
-echo '<h2>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page</h2>';
+echo '<h2>Preceding Page Probability (P3) - likelihood a page was opened during a visit before a given target page (filtered by page close event, time on page > 250 ms)</h2>';
 try {
 	$stmt = $conn->prepare("WITH CTE_Final AS (
 WITH
-	VLsel AS (Select * FROM VisitLogs where target in ('Open')),
+	VLsel AS (Select * FROM VisitLogs where target in ('Close') and timeOnPage > 250),
 	CTE_Outer AS (
         Select distinct v1.current as Page, v2.current as Prepage from VLsel v1
 		left join VLsel v2 on v2.current <> v1.current
